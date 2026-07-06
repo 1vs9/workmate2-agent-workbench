@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AgentDesk 系统架构图</title>
+<style>
+  :root {
+    --page-bg: #ffffff;
+    --ink: #1f2d3d;
+    --muted: #64748b;
+
+    /* central AgentScope panel */
+    --as-panel-bg: #eef5fd;
+    --as-panel-border: #c5dcf3;
+    --sub-bg: #d7e9fb;
+    --sub-border: #aacdf0;
+    --sub-title: #1f4f7a;
+    --chip-bg: #ffffff;
+    --chip-border: #a9cbed;
+    --chip-text: #1d4368;
+
+    /* pink branding panel */
+    --pink-bg: #fdeef1;
+    --pink-border: #f3c6d2;
+    --pink-chip-bg: #ffffff;
+    --pink-chip-border: #f0b9c8;
+    --pink-chip-text: #9a2f4d;
+
+    /* generic bordered boxes (left/right/top/bottom) */
+    --box-bg: #ffffff;
+    --box-border: #d3dde9;
+    --box-title: #334155;
+    --tag-bg: #f4f7fb;
+    --tag-border: #d7e1ec;
+    --tag-text: #2d4459;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--page-bg);
+    color: var(--ink);
+    font-family: "Segoe UI", "Microsoft YaHei", "PingFang SC",
+      "Hiragino Sans GB", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page { width: 1360px; margin: 0 auto; padding: 26px 26px 34px; }
+
+  header.title { text-align: center; margin-bottom: 20px; }
+  header.title h1 {
+    font-size: 26px; font-weight: 800; letter-spacing: .5px;
+    color: #16324d; margin: 0 0 6px;
+  }
+  header.title p { margin: 0; font-size: 13.5px; color: var(--muted); }
+
+  /* ---- master grid mirroring the reference layout ---- */
+  .layout {
+    display: grid;
+    grid-template-columns: 196px minmax(0, 1fr) 196px;
+    grid-template-rows: auto auto auto;
+    gap: 14px;
+    grid-template-areas:
+      "proto    storage   storage"
+      "left     center    eco"
+      "infra    infra     infra";
+  }
+
+  /* generic outer card */
+  .card {
+    background: var(--box-bg);
+    border: 1px solid var(--box-border);
+    border-radius: 12px;
+    padding: 12px 12px 13px;
+    box-shadow: 0 1px 3px rgba(30, 60, 100, 0.06);
+  }
+  .card__title {
+    font-size: 12.5px; font-weight: 700; color: var(--box-title);
+    text-transform: uppercase; letter-spacing: .6px;
+    margin: 0 0 10px; text-align: center;
+  }
+
+  /* small logo-like chip with an inline SVG mark + label */
+  .chip {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--box-bg);
+    border: 1px solid var(--box-border);
+    border-radius: 9px;
+    padding: 8px 10px;
+    font-size: 13px; font-weight: 600; color: var(--tag-text);
+    line-height: 1.2;
+  }
+  .chip svg { flex: 0 0 auto; }
+  .chip small { display:block; font-weight: 500; font-size: 11px; color: var(--muted); }
+
+  /* === PROTOCOLS (top-left) === */
+  .proto { grid-area: proto; display: flex; flex-direction: column; gap: 9px; }
+  .proto .chip { background: #fbfdff; }
+
+  /* === STORAGE row (top) === */
+  .storage { grid-area: storage; }
+  .storage__grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 9px;
+  }
+
+  /* === LEFT column: model providers === */
+  .left { grid-area: left; }
+  .providers__grid { display: flex; flex-direction: column; gap: 8px; }
+
+  /* === CENTER === */
+  .center { grid-area: center; display: flex; flex-direction: column; gap: 14px; }
+
+  /* pink branding panel */
+  .brand {
+    background: var(--pink-bg);
+    border: 1px solid var(--pink-border);
+    border-radius: 14px;
+    padding: 14px 16px;
+    display: grid;
+    grid-template-columns: 1.05fr 1.25fr 1.05fr;
+    gap: 14px;
+    align-items: center;
+  }
+  .brand__tags { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .brand__center { text-align: center; }
+  .brand__wordmark {
+    font-size: 30px; font-weight: 900; letter-spacing: .5px;
+    color: #b03a59; line-height: 1; margin: 4px 0 8px;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  .brand__sub {
+    background: #fff6f8; border: 1px solid var(--pink-chip-border);
+    border-radius: 10px; padding: 9px 10px;
+  }
+  .brand__sub h4 {
+    margin: 0 0 7px; font-size: 11.5px; font-weight: 800;
+    color: #9a2f4d; text-align: center; letter-spacing: .3px;
+  }
+  .brand__sub .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .ptag {
+    background: var(--pink-chip-bg); border: 1px solid var(--pink-chip-border);
+    border-radius: 8px; padding: 7px 9px; text-align: center;
+    font-size: 12px; font-weight: 700; color: var(--pink-chip-text);
+    line-height: 1.25;
+  }
+  .ptag.sm { font-size: 11px; font-weight: 600; padding: 6px 7px; }
+
+  /* AgentScope central panel */
+  .as {
+    background: var(--as-panel-bg);
+    border: 1px solid var(--as-panel-border);
+    border-radius: 14px;
+    padding: 14px;
+  }
+  .as__head {
+    display: flex; align-items: center; gap: 11px; margin: 2px 4px 13px;
+  }
+  .as__head h2 {
+    margin: 0; font-size: 23px; font-weight: 800; color: #14375b;
+    letter-spacing: .3px;
+  }
+  .as__head .badge {
+    margin-left: auto; font-size: 11px; font-weight: 700; color: #2c6a4a;
+    background: #e3f5ec; border: 1px solid #b9e3cd; border-radius: 999px;
+    padding: 4px 11px;
+  }
+  .as__grid {
+    display: grid; gap: 12px;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-areas:
+      "service service service"
+      "event   engine   engine"
+      "model   context  middleware";
+  }
+  .sub {
+    background: var(--sub-bg);
+    border: 1px solid var(--sub-border);
+    border-radius: 11px;
+    padding: 10px 11px 11px;
+  }
+  .sub h3 {
+    margin: 0 0 9px; font-size: 13px; font-weight: 800; color: var(--sub-title);
+    text-align: center; letter-spacing: .2px;
+  }
+  .sub__boxes { display: flex; flex-wrap: wrap; gap: 7px; }
+  .as-chip {
+    background: var(--chip-bg); border: 1px solid var(--chip-border);
+    border-radius: 8px; padding: 7px 9px; font-size: 12px; font-weight: 600;
+    color: var(--chip-text); flex: 1 1 auto; text-align: center; line-height: 1.25;
+  }
+  .as-chip.full { flex-basis: 100%; }
+  .a-service { grid-area: service; }
+  .a-service .sub__boxes { display: grid; grid-template-columns: repeat(3, 1fr); }
+  .a-event { grid-area: event; }
+  .a-engine { grid-area: engine; }
+  .a-engine .sub__boxes { display: grid; grid-template-columns: repeat(2, 1fr); }
+  .a-model { grid-area: model; }
+  .a-context { grid-area: context; }
+  .a-middleware { grid-area: middleware; }
+  .a-middleware .sub__boxes { display: grid; grid-template-columns: 1fr 1fr; }
+
+  /* === RIGHT ecosystem column === */
+  .eco { grid-area: eco; display: flex; flex-direction: column; gap: 12px; }
+  .eco .card { display: flex; flex-direction: column; gap: 7px; }
+
+  /* === BOTTOM infra row === */
+  .infra { grid-area: infra; }
+  .infra__grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 9px; }
+
+  footer.legend {
+    margin-top: 22px; font-size: 12px; color: var(--muted); line-height: 1.7;
+    border-top: 1px solid #e6ebf1; padding-top: 13px;
+  }
+  footer.legend b { color: #2c5b88; }
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="title">
+    <h1>AgentDesk 系统架构图</h1>
+    <p>依据当前代码库（<code>src/qwenpaw</code> · <code>src/qwenpaw/agentdesk</code>）实测整理 · 底层智能体框架为 AgentScope 2.0</p>
+  </header>
+
+  <div class="layout">
+
+    <!-- ===== Protocols (top-left) ===== -->
+    <div class="proto">
+      <div class="card" style="padding:11px 11px 12px;">
+        <p class="card__title">协议接入 Protocols</p>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div class="chip">
+            <svg width="20" height="20" viewBox="0 0 20 20"><rect x="2" y="5" width="16" height="10" rx="3" fill="none" stroke="#3b73b0" stroke-width="1.6"/><circle cx="7" cy="10" r="1.6" fill="#3b73b0"/><circle cx="13" cy="10" r="1.6" fill="#3b73b0"/></svg>
+            ACP<small>Agent Client Protocol</small>
+          </div>
+          <div class="chip">
+            <svg width="20" height="20" viewBox="0 0 20 20"><circle cx="5" cy="10" r="2.4" fill="none" stroke="#3b73b0" stroke-width="1.6"/><circle cx="15" cy="10" r="2.4" fill="none" stroke="#3b73b0" stroke-width="1.6"/><line x1="7.4" y1="10" x2="12.6" y2="10" stroke="#3b73b0" stroke-width="1.6"/></svg>
+            A2A<small>Agent-to-Agent 委派</small>
+          </div>
+          <div class="chip">
+            <svg width="20" height="20" viewBox="0 0 20 20"><path d="M4 14V7l4 4 4-4v7M16 7v7" fill="none" stroke="#3b73b0" stroke-width="1.6" stroke-linejoin="round"/></svg>
+            MCP<small>Model Context Protocol</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Storage row (top) ===== -->
+    <div class="storage">
+      <div class="card">
+        <p class="card__title">数据与存储 Storage（本地优先 · 无外部数据库）</p>
+        <div class="storage__grid">
+          <div class="chip"><svg width="20" height="20" viewBox="0 0 20 20"><path d="M4 5h12v10H4z" fill="none" stroke="#5b7fa6" stroke-width="1.5"/><path d="M4 8h12M7 5v10" stroke="#5b7fa6" stroke-width="1.2"/></svg>JSON 文件存储<small>store.json / json_repo</small></div>
+          <div class="chip"><svg width="20" height="20" viewBox="0 0 20 20"><path d="M3 6h6l1.5 2H17v8H3z" fill="none" stroke="#5b7fa6" stroke-width="1.5" stroke-linejoin="round"/></svg>工作区文件系统<small>Agent Workspace</small></div>
+          <div class="chip"><svg width="20" height="20" viewBox="0 0 20 20"><path d="M5 3h7l3 3v11H5z" fill="none" stroke="#5b7fa6" stroke-width="1.5" stroke-linejoin="round"/><path d="M7.5 9h5M7.5 12h5" stroke="#5b7fa6" stroke-width="1.2"/></svg>YAML 配置<small>Agent / Skill Config</small></div>
+          <div class="chip"><svg width="20" height="20" viewBox="0 0 20 20"><rect x="5" y="9" width="10" height="7" rx="1.5" fill="none" stroke="#5b7fa6" stroke-width="1.5"/><path d="M7 9V6.5a3 3 0 0 1 6 0V9" fill="none" stroke="#5b7fa6" stroke-width="1.5"/></svg>加密密钥库<small>Keyring · Cryptography</small></div>
+          <div class="chip"><svg width="20" height="20" viewBox="0 0 20 20"><ellipse cx="10" cy="6" rx="6" ry="2.4" fill="none" stroke="#5b7fa6" stroke-width="1.5"/><path d="M4 6v8c0 1.3 2.7 2.4 6 2.4s6-1.1 6-2.4V6" fill="none" stroke="#5b7fa6" stroke-width="1.5"/></svg>ADBPG 向量库<small>AnalyticDB PG · 可选</small></div>
+          <div class="chip"><svg width="20" height="20" viewBox="0 0 20 20"><rect x="4" y="4" width="12" height="12" rx="2" fill="none" stroke="#5b7fa6" stroke-width="1.5"/><path d="M7 10l2 2 4-4" fill="none" stroke="#5b7fa6" stroke-width="1.5" stroke-linecap="round"/></svg>能力缓存<small>capability cache</small></div>
+          <div class="chip"><svg width="20" height="20" viewBox="0 0 20 20"><path d="M4 7l6-3 6 3-6 3z" fill="none" stroke="#5b7fa6" stroke-width="1.4" stroke-linejoin="round"/><path d="M4 7v6l6 3 6-3V7" fill="none" stroke="#5b7fa6" stroke-width="1.4" stroke-linejoin="round"/></svg>技能池 Skill Pool<small>本地技能仓库</small></div>
+          <div class="chip"><svg width="20" height="20" viewBox="0 0 20 20"><rect x="4" y="4" width="12" height="12" rx="2" fill="none" stroke="#5b7fa6" stroke-width="1.5"/><path d="M4 8h12" stroke="#5b7fa6" stroke-width="1.2"/></svg>对话 / 任务记录<small>session · cron jobs</small></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Left: model providers ===== -->
+    <div class="left">
+      <div class="card">
+        <p class="card__title">模型提供方 Providers</p>
+        <div class="providers__grid">
+          <div class="chip">通义千问 Qwen<small>DashScope · ModelScope</small></div>
+          <div class="chip">DeepSeek</div>
+          <div class="chip">智谱 GLM<small>BigModel · Z.AI</small></div>
+          <div class="chip">Kimi<small>Moonshot</small></div>
+          <div class="chip">MiniMax</div>
+          <div class="chip">豆包 Doubao<small>Volcano Engine</small></div>
+          <div class="chip">OpenAI</div>
+          <div class="chip">Azure OpenAI</div>
+          <div class="chip">Anthropic Claude</div>
+          <div class="chip">Google Gemini</div>
+          <div class="chip">OpenRouter · OpenCode</div>
+          <div class="chip">SiliconFlow</div>
+          <div class="chip">本地模型<small>Ollama · LM Studio · llama.cpp</small></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Center ===== -->
+    <div class="center">
+
+      <!-- pink AgentDesk branding -->
+      <div class="brand">
+        <div class="brand__tags">
+          <div class="ptag">工具与技能安全<small></small></div>
+          <div class="ptag">浏览器自动化 Browser-Use</div>
+          <div class="ptag">多智能体 Multi-Agent</div>
+          <div class="ptag">记忆 Memory</div>
+          <div class="ptag">大小模型协同</div>
+          <div class="ptag">可定制数字员工</div>
+        </div>
+
+        <div class="brand__center">
+          <div class="brand__wordmark">
+            <svg width="34" height="34" viewBox="0 0 34 34"><rect x="3" y="3" width="28" height="28" rx="8" fill="#b03a59"/><path d="M11 23V11l6 8 6-8v12" fill="none" stroke="#fff" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/></svg>
+            AgentDesk
+          </div>
+          <div class="brand__sub">
+            <h4>内置数字员工 · 技能示例</h4>
+            <div class="grid2">
+              <div class="ptag sm">定时任务 Cron</div>
+              <div class="ptag sm">Office 文档</div>
+              <div class="ptag sm">PDF / 文件阅读</div>
+              <div class="ptag sm">资料检索研究</div>
+              <div class="ptag sm">技能创建 Make-Skill</div>
+              <div class="ptag sm">员工创建器 …</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="brand__tags">
+          <div class="ptag">主管-员工协作架构</div>
+          <div class="ptag">编码模式 Coding Mode</div>
+          <div class="ptag">多渠道接入 IM</div>
+          <div class="ptag">技能市场 Market</div>
+          <div class="ptag">主动记忆 Proactive</div>
+          <div class="ptag">桌面 / Web / CLI</div>
+        </div>
+      </div>
+
+      <!-- AgentScope 2.0 panel -->
+      <div class="as">
+        <div class="as__head">
+          <svg width="30" height="30" viewBox="0 0 30 30"><rect x="2.5" y="2.5" width="25" height="25" rx="7" fill="#2f74c0"/><path d="M9 21V9l6 9 6-9v12" fill="none" stroke="#fff" stroke-width="2.3" stroke-linejoin="round" stroke-linecap="round"/></svg>
+          <h2>AgentScope 2.0</h2>
+          <span class="badge">底层智能体框架</span>
+        </div>
+
+        <div class="as__grid">
+          <!-- Agent Service -->
+          <div class="sub a-service">
+            <h3>Agent Service 智能体服务</h3>
+            <div class="sub__boxes">
+              <div class="as-chip">后台任务管理<small>TaskTracker · Runner</small></div>
+              <div class="as-chip">会话管理 Session</div>
+              <div class="as-chip">用户认证授权 Auth</div>
+              <div class="as-chip">定时任务管理 Cron</div>
+              <div class="as-chip">存储管理 Store</div>
+              <div class="as-chip">工作区池 Workspace Pool</div>
+            </div>
+          </div>
+
+          <!-- Event System -->
+          <div class="sub a-event">
+            <h3>Event System 事件系统</h3>
+            <div class="sub__boxes">
+              <div class="as-chip full">消息与事件 Message &amp; Event</div>
+              <div class="as-chip full">SSE 流式事件 Streaming</div>
+              <div class="as-chip full">人工介入 Human-in-the-Loop</div>
+            </div>
+          </div>
+
+          <!-- Agent Engine -->
+          <div class="sub a-engine">
+            <h3>Agent Engine 智能体引擎</h3>
+            <div class="sub__boxes">
+              <div class="as-chip">推理 Reasoning<small>ReAct</small></div>
+              <div class="as-chip">执行 Acting</div>
+              <div class="as-chip">权限系统<small>Tool Guard · 审批</small></div>
+              <div class="as-chip">工具集 Toolkit</div>
+              <div class="as-chip">技能系统 Skill</div>
+              <div class="as-chip">编码模式 Coding</div>
+            </div>
+          </div>
+
+          <!-- Model -->
+          <div class="sub a-model">
+            <h3>Model 模型层</h3>
+            <div class="sub__boxes">
+              <div class="as-chip full">能力网关 Provider Manager</div>
+              <div class="as-chip">重试 Retries</div>
+              <div class="as-chip">大小模型路由</div>
+              <div class="as-chip">限流 Rate Limit</div>
+              <div class="as-chip">多模态探测</div>
+            </div>
+          </div>
+
+          <!-- Context Management -->
+          <div class="sub a-context">
+            <h3>Context Management 上下文</h3>
+            <div class="sub__boxes">
+              <div class="as-chip full">结构化压缩 Compaction</div>
+              <div class="as-chip full">上下文卸载 Offload</div>
+              <div class="as-chip full">工具结果裁剪 Pruning</div>
+              <div class="as-chip full">Token 计数</div>
+            </div>
+          </div>
+
+          <!-- Agent Middleware -->
+          <div class="sub a-middleware">
+            <h3>Agent Middleware 中间件</h3>
+            <div class="sub__boxes">
+              <div class="as-chip">Bootstrap 引导</div>
+              <div class="as-chip">请求装配 Setup</div>
+              <div class="as-chip">媒体处理</div>
+              <div class="as-chip">技能环境注入</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Right ecosystem ===== -->
+    <div class="eco">
+      <div class="card">
+        <p class="card__title">记忆生态 Memory</p>
+        <div class="chip"><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="6" fill="none" stroke="#5b7fa6" stroke-width="1.5"/><path d="M10 6v4l3 2" fill="none" stroke="#5b7fa6" stroke-width="1.5" stroke-linecap="round"/></svg>ReMe<small>reme-ai 记忆管理</small></div>
+        <div class="chip">主动记忆 Proactive<small>触发 / 回顾</small></div>
+        <div class="chip">Embedding<small>transformers · onnxruntime</small></div>
+      </div>
+      <div class="card">
+        <p class="card__title">技能市场 Market</p>
+        <div class="chip">ClawHub</div>
+        <div class="chip">ModelScope 魔搭</div>
+        <div class="chip">阿里云技能市场</div>
+        <div class="chip">SkillsMP</div>
+      </div>
+      <div class="card">
+        <p class="card__title">安全 Security</p>
+        <div class="chip">Tool Guard<small>危险命令拦截</small></div>
+        <div class="chip">Skill Scanner<small>技能安全扫描</small></div>
+      </div>
+    </div>
+
+    <!-- ===== Bottom infra ===== -->
+    <div class="infra">
+      <div class="card">
+        <p class="card__title">运行时与基础设施 Runtime &amp; Infrastructure</p>
+        <div class="infra__grid">
+          <div class="chip">AgentScope 2.0<small>Runtime / Session</small></div>
+          <div class="chip">FastAPI · Uvicorn<small>ASGI / REST</small></div>
+          <div class="chip">React + Vite<small>Web 控制台</small></div>
+          <div class="chip">APScheduler<small>定时调度</small></div>
+          <div class="chip">Playwright<small>浏览器内核</small></div>
+          <div class="chip">PyWebView<small>桌面外壳</small></div>
+          <div class="chip">Docker<small>容器部署</small></div>
+          <div class="chip">httpx<small>HTTP 客户端</small></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="legend">
+    <b>说明：</b>本图反映当前代码库实际使用的组件；底层智能体框架为 <b>AgentScope 2.0</b>，中央面板的结构沿用其分层但内部条目均为 AgentDesk 真实功能。<br />
+    <b>较通用参考图的取舍：</b>持久化为<b>本地 JSON 文件 + 文件系统</b>，未使用 MySQL / Oracle / PostgreSQL / OceanBase / TableStore / SQL Server / SQLite / mongoDB / Redis / Milvus / Qdrant / mem0 / EventBridge；
+    协议为 <b>ACP / A2A / MCP</b>（替换参考图的 A2UI / AG-UI / Response API）；
+    生态仅保留真实的 <b>ReMe</b>（移除 Data-Juicer / OpenJudge / Trinity-RFT）；
+    未接入 OpenTelemetry / Langfuse / LangSmith / Phoenix / ARMS / SLS / Higress / NACOS / RocketMQ / E2B 等（仅含安装级匿名遥测）；
+    工作区为<b>本地工作区</b>，未使用 Cloud Sandbox。
+  </footer>
+</div>
+</body>
+</html>

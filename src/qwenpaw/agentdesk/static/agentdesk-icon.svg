@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" role="img" aria-label="AgentDesk">
+  <defs>
+    <linearGradient id="wm-bg" x1="6" y1="4" x2="26" y2="28" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#34D399"/>
+      <stop offset="1" stop-color="#059669"/>
+    </linearGradient>
+    <linearGradient id="wm-shine" x1="8" y1="6" x2="20" y2="14" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fff" stop-opacity=".35"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="8" fill="url(#wm-bg)"/>
+  <rect width="32" height="32" rx="8" fill="url(#wm-shine)"/>
+  <circle cx="11.5" cy="13.5" r="4.25" fill="#fff" fill-opacity=".96"/>
+  <circle cx="20.5" cy="13.5" r="4.25" fill="#fff" fill-opacity=".88"/>
+  <path
+    d="M14.2 17.2c1-.9 2.6-.9 3.6 0l1.4 1.2c.8.7 1.3 1.7 1.3 2.8v.3H11.5v-.3c0-1.1.5-2.1 1.3-2.8l1.4-1.2Z"
+    fill="#ECFDF5"
+  />
+  <path
+    d="M15.2 17.8h1.6M16 17.8v2.2"
+    stroke="#059669"
+    stroke-width="1.35"
+    stroke-linecap="round"
+  />
+  <circle cx="24.5" cy="8.5" r="2.75" fill="#A7F3D0"/>
+  <circle cx="24.5" cy="8.5" r="1.35" fill="#047857"/>
+</svg>

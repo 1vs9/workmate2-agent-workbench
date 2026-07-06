@@ -1,0 +1,27 @@
+{
+  "last_run": "2026-06-29T09:22:14+08:00",
+  "upstream_url": "https://github.com/agentscope-ai/QwenPaw.git",
+  "known_agentdesk_base": "c74d5ea17f4c915421d28ab1331dec12b089c9d4",
+  "branches": {
+    "dev/agentscope2.0": {
+      "head": "bffedc6bdac351159b2779b3577dc52242ea077a",
+      "date": "2026-06-23",
+      "subject": "feat(sandbox): add bubblewrap Linux sandbox with mount namespace isolation (#5310)"
+    },
+    "gh-pages": {
+      "head": "c3caf76f4f4f9e683821a43aa54dd51a1a00df34",
+      "date": "2026-06-23",
+      "subject": "deploy: 09fc515c88a5e817870e6b975e66b5be81893e03"
+    },
+    "main": {
+      "head": "90e508e8dc9da01625c1949e60d5cb05eb8b5603",
+      "date": "2026-06-26",
+      "subject": "perf(ChatSession): optimize session switching performance (#5559)"
+    },
+    "sen/dream": {
+      "head": "f34a07111197c774bb952e956654dd90aa35729a",
+      "date": "2026-06-17",
+      "subject": "fix(console): keep empty dream_cron empty to disable dream job"
+    }
+  }
+}

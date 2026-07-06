@@ -1,0 +1,3 @@
+# The built React frontend (static_next/) is committed so a fresh clone
+# serves the new UI without needing Node/`npm run build`.
+# Rebuild with: cd web && npm ci && npm run build

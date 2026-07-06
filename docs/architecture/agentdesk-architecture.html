@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AgentDesk 系统架构图</title>
+<style>
+  :root {
+    --band-label-bg: #2f6fb3;
+    --band-label-bg-2: #3f7cbf;
+    --band-bg: #eef4fb;
+    --band-border: #cdddf0;
+    --box-bg: #dce9f7;
+    --box-bg-strong: #cfe0f4;
+    --box-border: #aac6e6;
+    --box-text: #1c3f63;
+    --sub-label-bg: #e7eefa;
+    --sub-label-border: #c4d6ec;
+    --sub-label-text: #284b6e;
+    --group-bg: #f6faff;
+    --group-border: #c9dbf0;
+    --group-title: #2c5b88;
+    --page-bg: #f0f3f7;
+    --ink: #20374c;
+    --muted: #5d738f;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--page-bg);
+    color: var(--ink);
+    font-family: "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB",
+      "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 28px 24px 40px;
+  }
+  header.title {
+    text-align: center;
+    margin-bottom: 22px;
+  }
+  header.title h1 {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #1d4063;
+    margin: 0 0 6px;
+  }
+  header.title p {
+    margin: 0;
+    font-size: 14px;
+    color: #5a7390;
+  }
+
+  .stack { display: flex; flex-direction: column; gap: 16px; }
+
+  /* One horizontal band = one architecture layer */
+  .band {
+    display: flex;
+    align-items: stretch;
+    background: var(--band-bg);
+    border: 1px solid var(--band-border);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(40, 80, 130, 0.08);
+  }
+  .band__label {
+    flex: 0 0 86px;
+    background: linear-gradient(180deg, var(--band-label-bg), var(--band-label-bg-2));
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    writing-mode: horizontal-tb;
+    padding: 10px 4px;
+  }
+  .band__body {
+    flex: 1 1 auto;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  /* A row inside a layer, optionally prefixed by a small sub-label */
+  .row {
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .row__sublabel {
+    flex: 0 0 78px;
+    background: var(--sub-label-bg);
+    border: 1px solid var(--sub-label-border);
+    border-radius: 8px;
+    color: var(--sub-label-text);
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 6px 4px;
+    line-height: 1.3;
+  }
+  .row__boxes {
+    flex: 1 1 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-content: flex-start;
+    min-width: 0;
+  }
+
+  .box {
+    background: var(--box-bg);
+    border: 1px solid var(--box-border);
+    border-radius: 8px;
+    color: var(--box-text);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 9px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    line-height: 1.35;
+    flex: 1 1 auto;
+    min-height: 40px;
+    transition: background 0.15s ease, box-shadow 0.15s ease;
+  }
+  .box small {
+    display: block;
+    font-size: 11.5px;
+    font-weight: 500;
+    color: #46688c;
+    margin-top: 2px;
+  }
+  .box:hover {
+    background: #c6dcf4;
+    box-shadow: 0 1px 4px rgba(40, 80, 130, 0.18);
+  }
+  .box.wide { flex-grow: 3; }
+  .box.full { flex-basis: 100%; }
+
+  /* Grouped sub-system inside a row (titled container of boxes) */
+  .group {
+    background: var(--group-bg);
+    border: 1px solid var(--group-border);
+    border-radius: 9px;
+    padding: 10px 12px 12px;
+    flex: 1 1 320px;
+    min-width: 0;
+  }
+  .group__title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--group-title);
+    text-align: center;
+    margin-bottom: 9px;
+  }
+  .group__boxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .group__boxes .box { font-size: 13.5px; padding: 8px 11px; }
+
+  .gateway {
+    background: linear-gradient(180deg, #3f7cbf, #356fae);
+    color: #fff;
+    border: none;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .gateway:hover { background: #356fae; box-shadow: none; }
+
+  footer.legend {
+    margin-top: 24px;
+    font-size: 12.5px;
+    color: #5a7390;
+    line-height: 1.7;
+    border-top: 1px solid #d7e0ea;
+    padding-top: 14px;
+  }
+  footer.legend b { color: #2c5b88; }
+
+  @media (max-width: 760px) {
+    .band__label { flex-basis: 56px; font-size: 15px; letter-spacing: 1px; }
+    .row { flex-direction: column; }
+    .row__sublabel { flex-basis: auto; align-self: flex-start; padding: 5px 12px; }
+    .box { font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="title">
+    <h1>AgentDesk 系统架构图</h1>
+    <p>基于当前代码库（qwenpaw / agentdesk）实测整理 · QwenPaw 个人智能助理平台</p>
+  </header>
+
+  <div class="stack">
+
+    <!-- ============ 交互层 ============ -->
+    <section class="band">
+      <div class="band__label">交互层</div>
+      <div class="band__body">
+        <div class="row">
+          <div class="row__sublabel">接入方式</div>
+          <div class="row__boxes">
+            <div class="box">AgentDesk Web<small>PC 浏览器控制台</small></div>
+            <div class="box">即时通讯渠道<small>钉钉 / 飞书 / 企微 / 微信 / QQ / Telegram / Discord / Matrix / iMessage / OneBot</small></div>
+            <div class="box">语音 / 电话<small>Voice / SIP / LiveKit</small></div>
+            <div class="box">命令行 CLI / TUI<small>Click + Textual</small></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row__sublabel">前端框架</div>
+          <div class="row__boxes">
+            <div class="box wide">React 18 + Vite + TypeScript</div>
+            <div class="box">Ant Design (antd)</div>
+            <div class="box">AgentScope Chat / Design</div>
+            <div class="box">Zustand · React Router · Tailwind</div>
+            <div class="box">ACP 客户端协议<small>IDE / 外部 Agent</small></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 应用层 ============ -->
+    <section class="band">
+      <div class="band__label">应用层</div>
+      <div class="band__body">
+        <div class="row">
+          <div class="row__sublabel">后端服务</div>
+          <div class="row__boxes">
+            <div class="box">FastAPI + Uvicorn (ASGI)</div>
+            <div class="box">BFF / REST API (/api)</div>
+            <div class="box">SSE 流式事件</div>
+          </div>
+          <div class="row__boxes">
+            <div class="box" style="flex-basis:100%">多模态输入：文件 / 图片 / 视频 / 截图 / 音频转写(ASR Whisper·DashScope)</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row__boxes">
+            <div class="group">
+              <div class="group__title">智能体编排</div>
+              <div class="group__boxes">
+                <div class="box">QwenPawAgent (ReAct)</div>
+                <div class="box">多智能体团队<small>Team Leader + 数字员工</small></div>
+                <div class="box">员工广场 Plaza</div>
+                <div class="box">编码模式 Coding Mode</div>
+                <div class="box">主动记忆 Proactive</div>
+              </div>
+            </div>
+            <div class="group">
+              <div class="group__title">记忆 / RAG</div>
+              <div class="group__boxes">
+                <div class="box">ReMe 记忆管理<small>reme-ai</small></div>
+                <div class="box">AgentMd / SOUL.md</div>
+                <div class="box">Embedding<small>transformers · onnxruntime</small></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row__sublabel">能力扩展</div>
+          <div class="row__boxes">
+            <div class="box">Skill 技能系统<small>技能池 / 工作区</small></div>
+            <div class="box">MCP<small>Model Context Protocol</small></div>
+            <div class="box">工具 Tools<small>Shell·文件·浏览器·LSP·AST</small></div>
+            <div class="box">A2A 外部 Agent<small>ACP delegate</small></div>
+            <div class="box">定时自动化<small>Automation / Cron</small></div>
+            <div class="box">技能市场<small>ClawHub · ModelScope · 阿里云</small></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 中间件层 ============ -->
+    <section class="band">
+      <div class="band__label">中间件层</div>
+      <div class="band__body">
+        <div class="row">
+          <div class="row__boxes">
+            <div class="box">AgentScope 2.0<small>Runtime / Session</small></div>
+            <div class="box">APScheduler<small>定时调度</small></div>
+            <div class="box">Playwright<small>浏览器自动化</small></div>
+            <div class="box">安全防护<small>Tool Guard · Skill Scanner</small></div>
+            <div class="box">Auth 中间件</div>
+            <div class="box">httpx 客户端</div>
+            <div class="box">PyWebView 桌面壳</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 存储层 ============ -->
+    <section class="band">
+      <div class="band__label">存储层</div>
+      <div class="band__body">
+        <div class="row">
+          <div class="row__boxes">
+            <div class="box">JSON 文件存储<small>store.json 产品数据</small></div>
+            <div class="box">工作区文件系统<small>Agent Workspace</small></div>
+            <div class="box">配置文件<small>YAML Agent Config</small></div>
+            <div class="box">加密密钥库<small>Keyring · Cryptography</small></div>
+            <div class="box">技能池 Skill Pool</div>
+            <div class="box">ADBPG 向量库<small>AnalyticDB PG · 可选</small></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 模型层 ============ -->
+    <section class="band">
+      <div class="band__label">模型层</div>
+      <div class="band__body">
+        <div class="row">
+          <div class="row__boxes">
+            <div class="box gateway full">能力网关 Provider Manager（统一 Provider / Model 管理 · 能力探测 · 限流重试）</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row__sublabel">大模型</div>
+          <div class="row__boxes">
+            <div class="box">Qwen 通义千问<small>DashScope / ModelScope</small></div>
+            <div class="box">DeepSeek</div>
+            <div class="box">智谱 GLM<small>BigModel / Z.AI</small></div>
+            <div class="box">Kimi<small>Moonshot</small></div>
+            <div class="box">MiniMax</div>
+            <div class="box">OpenAI</div>
+            <div class="box">Anthropic Claude</div>
+            <div class="box">Google Gemini</div>
+            <div class="box">OpenRouter</div>
+            <div class="box">本地模型<small>Ollama · LM Studio</small></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <footer class="legend">
+    <b>说明：</b>本图依据当前代码库实测整理（<code>src/qwenpaw/</code> 与 <code>src/qwenpaw/agentdesk/</code>），仅包含代码中实际存在的组件。<br />
+    <b>与通用参考图的差异：</b>AgentDesk 前端为 <b>React + Vite</b>（非 Vue / 低代码）；后端为 <b>Python FastAPI</b>（非 SpringBoot / OAuth2）；持久化为 <b>本地 JSON 文件 + 文件系统</b>（未使用 GoldenDB / Elasticsearch / OBS）；故<b>未包含</b>参考图中的 Neo4j 知识图谱、Nacos、MQ、对象存储等组件。
+  </footer>
+</div>
+</body>
+</html>

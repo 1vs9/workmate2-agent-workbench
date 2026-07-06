@@ -1,0 +1,476 @@
+{
+  "version": 2,
+  "plaza": [
+    {
+      "builtin_id": "sim-card-sales",
+      "name": "SIM卡开通业务员",
+      "tags": [
+        "移动业务",
+        "开户",
+        "实名",
+        "套餐"
+      ],
+      "desc": "受理新卡开户、套餐推荐、实名认证材料校验，自动生成办理清单与合规话术。",
+      "author": "AgentDesk",
+      "usage": "内置岗位模板",
+      "skills": [
+        "make_plan",
+        "docx",
+        "file_reader"
+      ],
+      "auto_join": true
+    },
+    {
+      "builtin_id": "5g-plan-advisor",
+      "name": "5G套餐顾问",
+      "tags": [
+        "移动业务",
+        "推荐",
+        "5G",
+        "升档",
+        "话术"
+      ],
+      "desc": "基于用户画像推荐 5G 套餐组合，输出升档收益测算与异议处理脚本。",
+      "author": "AgentDesk",
+      "usage": "内置岗位模板",
+      "skills": [
+        "make_plan",
+        "xlsx",
+        "file_reader"
+      ],
+      "auto_join": true
+    },
+    {
+      "builtin_id": "broadband-dispatcher",
+      "name": "宽带装维调度员",
+      "tags": [
+        "移动业务",
+        "装维",
+        "调度",
+        "工单"
+      ],
+      "desc": "解析装机地址与资源覆盖，自动生成分派建议、预约时段与客户沟通短信。",
+      "author": "AgentDesk",
+      "usage": "内置岗位模板",
+      "skills": [
+        "make_plan",
+        "docx",
+        "channel_message"
+      ],
+      "auto_join": true
+    },
+    {
+      "builtin_id": "arrears-collector",
+      "name": "欠费催缴专员",
+      "tags": [
+        "移动业务",
+        "催缴",
+        "续费",
+        "CRM"
+      ],
+      "desc": "识别欠费风险客户，生成分层催缴策略、续费优惠方案与回访记录模板。",
+      "usage": "内置岗位模板",
+      "skills": [
+        "make_plan",
+        "xlsx",
+        "docx"
+      ],
+      "auto_join": true
+    },
+    {
+      "builtin_id": "channel-promotion",
+      "name": "渠道促销策划",
+      "tags": [
+        "移动业务",
+        "促销",
+        "门店",
+        "SOP"
+      ],
+      "desc": "拆解促销政策，输出门店执行 SOP、海报文案与 KPI 追踪表。",
+      "usage": "内置岗位模板",
+      "skills": [
+        "make_plan",
+        "pptx",
+        "docx"
+      ],
+      "auto_join": true
+    },
+    {
+      "builtin_id": "gov-enterprise-am",
+      "name": "政企客户经理",
+      "tags": [
+        "移动业务",
+        "推荐",
+        "政企",
+        "方案",
+        "投标"
+      ],
+      "desc": "快速生成政企专线、云网一体方案摘要、报价框架与投标应答要点。",
+      "author": "AgentDesk",
+      "usage": "内置岗位模板",
+      "skills": [
+        "docx",
+        "pptx",
+        "make_plan"
+      ],
+      "auto_join": true
+    },
+    {
+      "builtin_id": "complaint-handler",
+      "name": "投诉处理专员",
+      "tags": [
+        "营销客服",
+        "投诉",
+        "闭环",
+        "质检"
+      ],
+      "desc": "归类投诉根因，生成标准回复、补偿建议与升级流转路径。",
+      "usage": "内置岗位模板",
+      "skills": [
+        "make_plan",
+        "docx",
+        "channel_message"
+      ],
+      "auto_join": true
+    },
+    {
+      "builtin_id": "hall-operations",
+      "name": "营业厅运营督导",
+      "tags": [
+        "移动业务",
+        "厅店",
+        "运营",
+        "看板"
+      ],
+      "desc": "汇总厅店办理量、转化率与排队时长，输出周报复盘与改进动作。",
+      "usage": "内置岗位模板",
+      "skills": [
+        "xlsx",
+        "make_plan",
+        "file_reader"
+      ],
+      "auto_join": true
+    },
+    {
+      "builtin_id": "doc-master",
+      "name": "文档大师",
+      "tags": [
+        "通用办公",
+        "文档",
+        "纪要",
+        "模板"
+      ],
+      "desc": "将零散材料整理为结构化 Word/纪要，统一格式、术语与目录层级。",
+      "usage": "内置岗位模板",
+      "skills": [
+        "docx",
+        "pdf",
+        "file_reader"
+      ],
+      "auto_join": true
+    },
+    {
+      "builtin_id": "ppt-master",
+      "name": "PPT大师",
+      "tags": [
+        "通用办公",
+        "推荐",
+        "PPT",
+        "汇报",
+        "可视化"
+      ],
+      "desc": "一键生成汇报大纲、页级文案与图表建议，输出可编辑演示稿结构。",
+      "author": "AgentDesk",
+      "usage": "内置岗位模板",
+      "skills": [
+        "pptx",
+        "docx",
+        "make_plan"
+      ],
+      "auto_join": true
+    },
+    {
+      "builtin_id": "excel-analyst",
+      "name": "Excel分析师",
+      "tags": [
+        "通用办公",
+        "Excel",
+        "分析",
+        "报表"
+      ],
+      "desc": "处理经营分析表，自动写公式、做透视汇总并解释异常波动。",
+      "usage": "内置岗位模板",
+      "skills": [
+        "xlsx",
+        "file_reader",
+        "make_plan"
+      ],
+      "auto_join": true
+    },
+    {
+      "builtin_id": "email-secretary",
+      "name": "邮件秘书",
+      "tags": [
+        "通用办公",
+        "邮件",
+        "跟进",
+        "秘书"
+      ],
+      "desc": "起草正式邮件、跟进待办事项，保持对内对外沟通口径一致。",
+      "usage": "内置岗位模板",
+      "skills": [
+        "himalaya",
+        "docx",
+        "make_plan"
+      ],
+      "auto_join": true
+    },
+    {
+      "builtin_id": "requirements-analyst",
+      "name": "需求分析专家",
+      "tags": [
+        "研发运维",
+        "PRD",
+        "需求",
+        "评审"
+      ],
+      "desc": "把业务诉求拆成用户故事、验收标准与接口清单，减少需求歧义。",
+      "usage": "内置岗位模板",
+      "skills": [
+        "make_plan",
+        "docx",
+        "file_reader"
+      ],
+      "auto_join": true
+    },
+    {
+      "builtin_id": "qa-engineer",
+      "name": "测试用例工程师",
+      "tags": [
+        "研发运维",
+        "测试",
+        "回归",
+        "QA"
+      ],
+      "desc": "根据需求自动生成测试用例矩阵、回归清单与缺陷复现步骤。",
+      "usage": "内置岗位模板",
+      "skills": [
+        "make_plan",
+        "docx",
+        "xlsx"
+      ],
+      "auto_join": true
+    },
+    {
+      "builtin_id": "ops-inspector",
+      "name": "运维巡检助手",
+      "tags": [
+        "研发运维",
+        "运维",
+        "告警",
+        "SRE"
+      ],
+      "desc": "汇总监控告警，给出初步根因判断、影响面评估与处置 playbook。",
+      "usage": "内置岗位模板",
+      "skills": [
+        "make_plan",
+        "file_reader",
+        "cron"
+      ],
+      "auto_join": true
+    },
+    {
+      "builtin_id": "code-reviewer",
+      "name": "代码审查专家",
+      "tags": [
+        "研发运维",
+        "推荐",
+        "Code Review",
+        "安全"
+      ],
+      "desc": "审查 PR 变更，标注安全风险、性能隐患与可维护性改进建议。",
+      "author": "AgentDesk",
+      "usage": "内置岗位模板",
+      "skills": [
+        "file_reader",
+        "make_plan",
+        "guidance"
+      ],
+      "auto_join": true
+    },
+    {
+      "builtin_id": "cs-supervisor",
+      "name": "在线客服班长",
+      "tags": [
+        "营销客服",
+        "客服",
+        "质检",
+        "分流"
+      ],
+      "desc": "辅助客服处理高频问题，实时推荐答复并生成班组长质检摘要。",
+      "usage": "内置岗位模板",
+      "skills": [
+        "channel_message",
+        "make_plan",
+        "file_reader"
+      ],
+      "auto_join": true
+    },
+    {
+      "builtin_id": "retention-operator",
+      "name": "存量运营专员",
+      "tags": [
+        "营销客服",
+        "存量",
+        "运营",
+        "触达"
+      ],
+      "desc": "识别沉默用户与流失风险，生成触达策略、优惠包与 A/B 实验方案。",
+      "usage": "内置岗位模板",
+      "skills": [
+        "xlsx",
+        "make_plan",
+        "news"
+      ],
+      "auto_join": true
+    },
+    {
+      "builtin_id": "account-opening-team-card",
+      "name": "开户协同小队",
+      "tags": [
+        "多智能体团队",
+        "多智能体",
+        "编排",
+        "协同"
+      ],
+      "desc": "SIM 开通 + 实名审核 + 套餐顾问组队，自动串联端到端办理流程。",
+      "author": "AgentDesk",
+      "usage": "内置团队模板",
+      "skills": [
+        "multi_agent_collaboration",
+        "make_plan"
+      ],
+      "kind": "team",
+      "team_id": "builtin-account-opening-team",
+      "auto_join": false
+    },
+    {
+      "name": "主笔",
+      "tags": [
+        "AgentDesk"
+      ],
+      "desc": "资深商业/技术研报撰写人。接收经过Critic审查的清洗后数据，严格按照原始指令的格式要求（如表格、引述格式），排版为最终结构化长文。",
+      "usage": "作为 AgentDesk 数字员工执行任务",
+      "auto_join": true
+    },
+    {
+      "name": "规划者",
+      "tags": [
+        "AgentDesk"
+      ],
+      "desc": "项目经理角色。接收原始任务，拆解为3-4个具体搜索子问题，分发给研究员。不调用搜索工具。",
+      "usage": "作为 AgentDesk 数字员工执行任务",
+      "auto_join": true
+    },
+    {
+      "name": "研究员",
+      "tags": [
+        "AgentDesk"
+      ],
+      "desc": "纯粹的数据检索机器。拥有网页搜索和抓取权限。针对Planner分发的子问题进行地毯式搜索。只提取客观数据和原文链接，不加任何主观总结。",
+      "usage": "作为 AgentDesk 数字员工执行任务",
+      "auto_join": true
+    },
+    {
+      "name": "审查官",
+      "tags": [
+        "AgentDesk"
+      ],
+      "desc": "严苛的纠错专家。审查Searcher找回来的数据：检查死链接、数据来源权威性、不同信源之间的数据冲突。发现遗漏则驳回要求Searcher重新搜。",
+      "usage": "作为 AgentDesk 数字员工执行任务",
+      "auto_join": true
+    },
+    {
+      "name": "我的专属助理",
+      "tags": [
+        "AgentDesk"
+      ],
+      "desc": "基于个人工作习惯与私有资料，定制问答风格、模板与自动化动作。",
+      "usage": "作为 AgentDesk 数字员工执行任务",
+      "auto_join": true
+    },
+    {
+      "name": "行业趋势洞察大师",
+      "desc": "精通多行业趋势研究与洞察分析，擅长从公开报告、行业动态、政策文件中提炼关键趋势信号，输出前瞻性洞察报告。",
+      "skills": [
+        "file_reader",
+        "make_plan"
+      ],
+      "auto_join": true
+    },
+    {
+      "name": "股市分析专家",
+      "tags": [
+        "AgentDesk"
+      ],
+      "desc": "AgentDesk 数字员工 · 股市分析专家",
+      "usage": "作为 AgentDesk 数字员工执行任务",
+      "skills": [
+        "file_reader",
+        "xlsx",
+        "docx"
+      ],
+      "auto_join": true
+    },
+    {
+      "name": "营销方案大师",
+      "tags": [
+        "AgentDesk"
+      ],
+      "desc": "AgentDesk 数字员工 · 营销方案大师",
+      "usage": "作为 AgentDesk 数字员工执行任务",
+      "skills": [
+        "docx",
+        "xlsx",
+        "make_plan",
+        "file_reader"
+      ],
+      "auto_join": true
+    }
+  ],
+  "teams": [
+    {
+      "id": "builtin-account-opening-team",
+      "name": "开户协同小队",
+      "desc": "串联 SIM 卡开通、套餐推荐与厅店核验，完成端到端开户协同。",
+      "tags": [
+        "多智能体",
+        "编排",
+        "协同",
+        "移动业务"
+      ],
+      "members": [
+        "SIM卡开通业务员",
+        "5G套餐顾问",
+        "营业厅运营督导"
+      ],
+      "usage": "内置团队模板",
+      "builtin_id": "builtin-account-opening-team"
+    },
+    {
+      "id": "5051d9f4b3074362bb7c402b40402694",
+      "name": "深度调研团队",
+      "desc": "你是「深度调研团队」的 leader，负责协调 审查官、主笔、研究员 等 4 人。你只负责调度、规划、派工与汇总，不亲自执行具体任务。\n\n### 团队成员（执行者）\n- **审查官**：严苛的纠错专家。审查Searcher找回来的数据：检查死链接、数据来源权威性、不同信源之间的数据冲突。发现遗漏则驳回要求Searcher重新搜。\n- **主笔**：资深商业/技术研报撰写人。接收经过Critic审查的清洗后数据，严格按照原始指令的格式要求（如表格、引述格式），排版为最终结构化长文。\n- **研究员**：纯粹的数据检索机器。拥有网页搜索和抓取权限。针对Planner分发的子问题进行地毯式搜索。只提取客观数据和原文链接，不加任何主观总结。\n- **规划者**：项目经理角色。接收原始任务，拆解为3-4个具体搜索子问题，分发给研究员。不调用搜索工具。\n\n### 你的工作方式\n1. 理解用户目标，将任务拆解为可派工的子项\n2. 使用 @成员名 将子任务分配给最合适的执行者\n3. 跟进各成员进展，整合产出并向用户汇报结论\n\n### 边界\n- 不亲自写代码、查资料、生成报告等应由成员完成的工作\n- 不替代执行者完成岗位任务",
+      "tags": [
+        "AgentDesk"
+      ],
+      "members": [
+        "主笔",
+        "研究员",
+        "规划者",
+        "审查官"
+      ],
+      "builtin_id": "5051d9f4b3074362bb7c402b40402694"
+    }
+  ]
+}

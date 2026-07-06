@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none" role="img" aria-label="c(Æ™±¯ƒ">
+  <defs>
+    <linearGradient id="wm-sb-ring" x1="40" y1="20" x2="160" y2="180" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#10B981"/>
+      <stop offset="1" stop-color="#3B82F6" stop-opacity="0.55"/>
+    </linearGradient>
+    <linearGradient id="wm-sb-fill" x1="70" y1="70" x2="130" y2="130" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ECFDF5"/>
+      <stop offset="1" stop-color="#F0FDF4"/>
+    </linearGradient>
+    <style>
+      @keyframes wm-sb-spin { to { transform: rotate(360deg); } }
+      @keyframes wm-sb-pulse {
+        0%, 100% { opacity: 0.35; transform: scale(0.92); }
+        50% { opacity: 1; transform: scale(1); }
+      }
+      @keyframes wm-sb-scan {
+        0%, 100% { transform: translateY(0); opacity: 0.35; }
+        50% { transform: translateY(72px); opacity: 0.85; }
+      }
+      .ring-outer { transform-origin: 100px 100px; animation: wm-sb-spin 14s linear infinite; }
+      .ring-inner { transform-origin: 100px 100px; animation: wm-sb-spin 9s linear infinite reverse; }
+      .cell { animation: wm-sb-pulse 1.8s ease-in-out infinite; }
+      .cell-1 { animation-delay: 0s; }
+      .cell-2 { animation-delay: .12s; }
+      .cell-3 { animation-delay: .24s; }
+      .cell-4 { animation-delay: .36s; }
+      .cell-5 { animation-delay: .48s; }
+      .cell-6 { animation-delay: .6s; }
+      .cell-7 { animation-delay: .72s; }
+      .cell-8 { animation-delay: .84s; }
+      .cell-9 { animation-delay: .96s; }
+      .scan { animation: wm-sb-scan 2.4s ease-in-out infinite; }
+    </style>
+  </defs>
+  <circle class="ring-outer" cx="100" cy="100" r="78" stroke="url(#wm-sb-ring)" stroke-width="2" stroke-dasharray="8 10" stroke-linecap="round" opacity="0.55"/>
+  <circle class="ring-inner" cx="100" cy="100" r="68" stroke="#059669" stroke-width="1.5" stroke-dasharray="4 14" opacity="0.28"/>
+  <rect x="58" y="58" width="84" height="84" rx="16" fill="url(#wm-sb-fill)" stroke="rgba(16,185,129,0.35)" stroke-width="1.5"/>
+  <rect class="cell cell-1" x="72" y="72" width="14" height="14" rx="4" fill="#059669" opacity="0.45"/>
+  <rect class="cell cell-2" x="92" y="72" width="14" height="14" rx="4" fill="#059669" opacity="0.45"/>
+  <rect class="cell cell-3" x="112" y="72" width="14" height="14" rx="4" fill="#059669" opacity="0.45"/>
+  <rect class="cell cell-4" x="72" y="92" width="14" height="14" rx="4" fill="#059669" opacity="0.45"/>
+  <rect class="cell cell-5" x="92" y="92" width="14" height="14" rx="4" fill="#059669" opacity="0.45"/>
+  <rect class="cell cell-6" x="112" y="92" width="14" height="14" rx="4" fill="#059669" opacity="0.45"/>
+  <rect class="cell cell-7" x="72" y="112" width="14" height="14" rx="4" fill="#059669" opacity="0.45"/>
+  <rect class="cell cell-8" x="92" y="112" width="14" height="14" rx="4" fill="#059669" opacity="0.45"/>
+  <rect class="cell cell-9" x="112" y="112" width="14" height="14" rx="4" fill="#059669" opacity="0.45"/>
+  <rect class="scan" x="62" y="62" width="76" height="3" rx="1.5" fill="#34D399" opacity="0.7"/>
+</svg>

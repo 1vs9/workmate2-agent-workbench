@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" role="img" aria-label="AgentDesk">
+  <rect width="32" height="32" rx="8" fill="#fff"/>
+  <rect width="32" height="32" rx="8" stroke="#e5e7eb" stroke-width="0.5"/>
+  <g fill="#065f46" transform="translate(4 4)">
+    <path d="M12 3l1.6 4.9L18.5 9l-4.9 1.6L12 15.5 9.4 10.6 4.5 9l4.9-1.6L12 3z"/>
+    <path d="M19 14l.9 2.7L22.5 18l-2.6.9L19 21.5l-.9-2.6L15.5 18l2.6-.9L19 14z"/>
+  </g>
+</svg>
